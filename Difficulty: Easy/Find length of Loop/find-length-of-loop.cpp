@@ -1,7 +1,9 @@
 /*
-struct Node {
+class Node {
+ public:
     int data;
-    struct Node *next;
+    Node *next;
+
     Node(int x) {
         data = x;
         next = NULL;
@@ -11,27 +13,30 @@ struct Node {
 */
 class Solution {
   public:
-    // Function to find the length of a loop in the linked list.
-    int countNodesinLoop(Node *head) {
+    int lengthOfLoop(Node *head) {
         // Code here
-        struct Node* s = head;
-        struct Node* f = head;
         int c=0;
+        if(head == NULL)return 0;
+        
+        Node* s = head;
+        Node* f = head;
+        
         while(f!= NULL && f->next != NULL){
             s= s->next;
             f = f->next->next;
-            if(s==f){
-                c=1;
-                s= s->next;
+            
+            if(s == f){
+                s=s->next;
+                c++;
                 while(s!= f){
-                  
+                    s=s->next;
                     c++;
-                    s = s->next;
                 }
                 return c;
             }
             
         }
         return 0;
+        
     }
 };
