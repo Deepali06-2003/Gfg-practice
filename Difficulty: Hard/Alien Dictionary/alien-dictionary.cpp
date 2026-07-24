@@ -1,77 +1,72 @@
 class Solution {
   public:
   
-  vector<int> topo_sort(int V , vector<int>adj[]){
-
-	vector<int>indegree(V, 0);
-	for(int i =0;i<V;i++){
-		for(auto j: adj[i]){
-			indegree[j]++;
-		}
-	}
-
-	queue<int>q;
-	for(int i =0;i<V;i++){
-		if(indegree[i]==0)q.push(i);
-	}
-	vector<int>res;
-	while(!q.empty()){
-		int x = q.front();
-		q.pop();
-
-		res.push_back(x);
-
-		for(auto j:adj[x]){
-			indegree[j]--;
-			if(indegree[j]==0)q.push(j);
-		}
-	}
-	return res;
-}
-
-    string findOrder(vector<string> &words) {
-        // code here
-        int N = words.size();
+ bool helper(string& a, string& b, vector<vector<int>>& adj){
+      int len = min(a.size(), b.size());
+        int i = 0;
         
-        unordered_set<char> st;
-        for(auto &w : words){
-            for(char c : w){
-                st.insert(c);
+        while(i < len && a[i] == b[i])
+            i++;
+        
+        if(i == len){
+            if(a.size() > b.size()) return false;
+                // invalid
+        }
+        else{
+            int u = a[i]-'a' , v = b[i]-'a';
+            if (find(adj[u].begin(), adj[u].end(), v) == adj[u].end()) {
+                adj[u].push_back(v);
             }
         }
-
-        
-        
-        vector<int>adj[26];
-
-		for(int i=0;i<N-1;i++){
-
-			string s1 = words[i];
-			string s2 = words[i+1];
-            
-            if(s1.size() > s2.size() && s1.substr(0, s2.size()) == s2)
-                return "";
-            
-			int l = min(s1.size(), s2.size());
-			for(int j=0;j<l;j++){
-				
-				if(s1[j]!=s2[j]){
-					adj[s1[j]-'a'].push_back(s2[j]-'a');
-					break;
-				}
-
-			}
-		}
-
-		vector<int>topo = topo_sort(26, adj);
-		string ans ="";
-		for(int i : topo){
-            if(st.count(char(i + 'a')))
-                ans += char(i + 'a');
+        return true;
+  }
+  
+  
+    string findOrder(vector<string> &words) {
+        // code here
+        unordered_set<int>st;
+        for(string word : words){
+            for(char c : word){
+                if(st.find(c-'a') == st.end()) st.insert(c-'a');
+            }
         }
-		if(ans.size() != st.size())
-            return "";
-		return ans;
-	
+         
+        vector<vector<int>>adj(26);
+        for (int i = 0; i < words.size() - 1; i++) {
+            if (!helper(words[i], words[i+1], adj))
+                return "";
+        }
+        
+        int V = adj.size();
+        string res="";
+        
+        vector<int>indegree(V, 0);
+        for(int i=0;i<V;i++){
+            for(auto j: adj[i]) indegree[j]++;
+        }
+        
+        queue<int>q;
+        for(int i=0;i<V;i++){
+            if(indegree[i]==0 && st.count(i)) q.push(i);
+        }
+        
+        
+        while(!q.empty()){
+            int x = q.front();
+            q.pop();
+            
+            res += (x+'a');
+            
+            for(auto j: adj[x]){
+                indegree[j]--;
+                if(indegree[j]==0) q.push(j);
+            }
+            
+        }
+        
+        
+        if(res.size() == st.size()) return res;
+        
+         return "";
     }
 };
