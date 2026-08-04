@@ -2,43 +2,47 @@ class Solution {
   public:
     int spanningTree(int V, vector<vector<int>>& edges) {
         // code here
-        vector<vector<pair<int, int>>>adj(V);
+        vector<vector<pair<int,int>>>adj(V);
         for(int i=0;i<edges.size();i++){
-            int u = edges[i][0];
-            int v = edges[i][1];
-            int c = edges[i][2];
+            int u = edges[i][0], v = edges[i][1], wt = edges[i][2];
             
-            adj[u].push_back({v, c});
-            adj[v].push_back({u, c});
+            adj[u].push_back({v, wt});adj[v].push_back({u, wt});
         }
         
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>>pq;
-        vector<int>visited(V , 0);
+        vector<pair<int, int>>mst;
+        vector<int>visited(V, 0);
         
-        pq.push({0 , 0});
-        int sum =0;
+           priority_queue<
+        pair<int, pair<int,int>>,
+        vector<pair<int, pair<int,int>>>,
+        greater<pair<int, pair<int,int>>>
+    > pq;
+        
+        int sum=0;
+        pq.push({0, {0, -1}});  //wt, node parent
         
         while(!pq.empty()){
             
-            auto t = pq.top();
+            auto temp = pq.top();
             pq.pop();
             
-            int w = t.first;
-            int node = t.second;
+            int node = temp.second.first , wt = temp.first, p = temp.second.second;
             
-            if(visited[node])continue;
+            if(visited[node]==1) continue;
             
-             visited[node] = 1;
-            sum += w;
-        
-            for(auto &j : adj[node]){
-                int ed_n = j.first;   // corrected
-                int wt = j.second;    // corrected
-                
-                if(!visited[ed_n])   pq.push({wt, ed_n});
+            visited[node]=1;
+            sum = sum+wt;
+            mst.push_back({p,node});
+            
+            for(auto j: adj[node]){
+                if(visited[j.first] != 0) continue;
+                else pq.push({j.second , {j.first, node}});
             }
         }
         
+        //for(auto i: mst){
+        //    cout<<i.first<<' '<<i.second<<endl;
+        //}
         return sum;
     }
 };
