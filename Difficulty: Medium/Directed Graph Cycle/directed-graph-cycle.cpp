@@ -1,40 +1,36 @@
 class Solution {
   public:
   
+  bool helper(vector<vector<int>>& adj,vector<int>& visited , vector<int>& path_visited, int n){
+      
+      visited[n]=1;
+      path_visited[n]=1;
+      
+      for(auto j: adj[n]){
+          if(visited[j]==-1){
+              if(helper(adj, visited, path_visited, j)==true) return true;
+          }
+          else if(visited[j]==1 && path_visited[j]==1) return true;
+      }
+      path_visited[n]=0;
+      return false;
+  }
     bool isCyclic(int V, vector<vector<int>> &edges) {
         // code here
-        vector<int>res;
-        
         vector<vector<int>>adj(V);
         for(int i=0;i<edges.size();i++){
             adj[edges[i][0]].push_back(edges[i][1]);
+            //adj[edges[i][1]].push_back(edges[i][0]);
         }
+
+        vector<int>visited(V, -1);
+        vector<int>path_visited(V, -1);
         
-        vector<int>indegree(V, 0);
         for(int i=0;i<V;i++){
-            for(auto j : adj[i]){
-                indegree[j]++;
+            if(visited[i] == -1){
+                if(helper(adj, visited, path_visited,i) == true) return true;
             }
         }
-        
-        queue<int>q;
-        for(int i=0;i<V;i++){
-            if(indegree[i]==0) q.push(i);
-        }
-        
-        while(!q.empty()){
-            
-            int x = q.front();
-            q.pop();
-            
-            res.push_back(x);
-            
-            for(auto j: adj[x]){
-                indegree[j]--;
-                if(indegree[j]==0) q.push(j);
-            }
-        }
-        return (res.size()!=V);
-        
+        return false;
     }
 };
