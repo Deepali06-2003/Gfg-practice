@@ -1,14 +1,13 @@
 class Solution {
   public:
-  void dfs(int node, vector<vector<int>>& adjList, vector<int>& visited){
-      visited[node] =1;
-      
-      for(auto j: adjList[node]){
-          if(visited[j]==0){
-              dfs(j, adjList , visited);
-          }
-      }
-  }
+    
+    void helper(vector<vector<int>>& adjList, vector<int>& visited, int n){
+        visited[n]=1;
+        
+        for(auto j: adjList[n]){
+            if(visited[j] == -1) helper(adjList, visited, j);
+        }
+    }
     int countConnected(int V, vector<vector<int>>& edges) {
         // code here
         vector<vector<int>> adjList(V);
@@ -21,15 +20,18 @@ class Solution {
             adjList[v].push_back(u);
         }
         
-        vector<int>visited(V, 0);
+        vector<int>visited(V,-1);
         int ans=0;
-        for(int i=0;i<V;i++){
-            if(visited[i]==0){
-                dfs(i, adjList , visited);
+        
+        for(int i =0;i<V;i++){
+            if(visited[i] == -1){
+                helper(adjList, visited, i);
                 ans++;
             }
         }
         
         return ans;
+        
+        
     }
 };
