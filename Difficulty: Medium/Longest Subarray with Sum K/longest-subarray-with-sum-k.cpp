@@ -4,26 +4,24 @@ class Solution {
         // code here
         int n = arr.size();
         
-        int ans = 0;
         unordered_map<int, int>mp;
-        vector<int>prefix(n, 0);
         
-        prefix[0] = arr[0];
-        if(arr[0]==k) ans=1;
-        mp[prefix[0]] = 0;
+        int sum =0, ans=0;
+        if(arr[0]==k) ans = 1;
+        
+        sum = sum + arr[0];
+        mp[sum] = 0;
         
         for(int i=1;i<n;i++){
-           prefix[i] = prefix[i-1] +arr[i];
-           
-           if (prefix[i] == k)
-                ans = max(ans, i + 1);
-                
-           if(mp.find(prefix[i]-k) != mp.end()){
-               ans = max(ans, i-mp[prefix[i]-k]);
-           }
-           if (mp.find(prefix[i]) == mp.end())
-            mp[prefix[i]] = i;
+            sum = sum + arr[i];
+            
+            if(sum == k) ans = max(ans , i+1);
+            if(mp.find(sum-k) != mp.end()) ans = max(ans, i-mp[sum-k]);
+            
+            if(mp.find(sum) == mp.end()) mp[sum] = i;
         }
         return ans;
+        
+        
     }
 };
