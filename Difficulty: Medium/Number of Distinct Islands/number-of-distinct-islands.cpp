@@ -1,42 +1,43 @@
 class Solution {
   public:
   
-  set<vector<pair<int,int>>> shapes;
+  set<vector<pair<int, int>>>st;
   
-  void dfs(vector<vector<char>>& grid, int n , int m , int i, int j, int& base_i, int& base_j , vector<pair<int,int>>& temp){
+  
+  void helper(vector<vector<char>>& grid, int i, int j, int n , int m, vector<pair<int, int>>& temp, int b_x, int b_y){
       if(i<0 || j<0 || i>=n || j>=m || grid[i][j]=='W') return;
       
       grid[i][j]='W';
-      int coor_x = i - base_i;
-      int coor_y = j - base_j;
-      temp.push_back({coor_x, coor_y});
+      int x = i - b_x;
+      int y = j - b_y;
       
-      dfs(grid, n, m, i+1, j, base_i, base_j, temp);
-      dfs(grid, n, m, i-1, j, base_i, base_j, temp);
-      dfs(grid, n, m, i, j+1, base_i, base_j, temp);
-      dfs(grid, n, m, i, j-1, base_i, base_j, temp);
+      temp.push_back({x, y});
+      
+      helper(grid, i+1, j, n, m , temp, b_x, b_y);
+      helper(grid, i-1, j, n, m , temp, b_x, b_y);
+      helper(grid, i, j+1, n, m , temp, b_x, b_y);
+      helper(grid, i, j-1, n, m , temp, b_x, b_y);
   }
-  
     int countDistinctIslands(vector<vector<char>>& grid) {
         // code here
-        int n = grid.size();
-        int m = grid[0].size();
+        int n = grid.size(), m = grid[0].size();
         
-        
+        int ans=0;
+
         for(int i=0;i<n;i++){
             for(int j=0;j<m;j++){
-                if(grid[i][j]=='L'){
-                    vector<pair<int,int>> temp;
-                    dfs(grid, n, m , i, j, i, j, temp);
+                
+                if(grid[i][j] == 'L'){
+                    vector<pair<int, int>>temp;
+                    helper(grid, i, j , n , m , temp, i, j);
                     
-                    if(shapes.find(temp) == shapes.end()){
-                       shapes.insert(temp);
+                    if(st.find(temp) == st.end()){
+                        st.insert(temp);
+                        ans++;
                     }
-                    
                 }
             }
         }
-        
-        return shapes.size();
+        return ans;
     }
 };
