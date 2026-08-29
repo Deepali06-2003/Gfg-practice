@@ -3,35 +3,37 @@ class Solution {
     int minSteps(vector<int>& arr, int start, int end) {
         // code here
         
-        vector<int>dist(1000, INT_MAX);
-                // node, start
-        queue<pair<int, int>>q;
+        int n = arr.size();
+        if(start == end) return 0;
         
+        queue<int>q;
+        vector<int>visited(1000, -1);
         
-        q.push({start, 0});
-        dist[start] = 0;
+        q.push(start);
+        visited[start] =1;
+        
+        int ans=0;
         
         while(!q.empty()){
-            auto j = q.front();
-            q.pop();
+            int sz = q.size();
             
-            int node = j.first;
-            int step = j.second;
-            
-            for(int i=0;i<arr.size();i++){
-                int n = (node* arr[i]) % 1000;
+            for(int z=0;z<sz;z++){
+                int j = q.front();
+                q.pop();
                 
-                if(dist[n] > step+1){
-                    dist[n] = step+1;
+                for(int i=0;i<n;i++){
+                    int x = (j*arr[i])%1000;
+                    if(x == end) return ans+1;
                     
-                    if(n == end) return step+1;
-                    q.push({n, dist[n]});
+                    if(visited[x]==-1){
+                        q.push(x);
+                        visited[x]=1;
+                    }
+                
                 }
             }
+            ans++;
         }
-        
-        
-        if(dist[end] == INT_MAX) return -1;
-        return dist[end];
+        return -1;
     }
 };
