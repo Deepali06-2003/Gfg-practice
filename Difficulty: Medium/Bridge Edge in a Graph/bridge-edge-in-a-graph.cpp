@@ -1,27 +1,35 @@
 class Solution {
   public:
   
-  void dfs(vector<int>& visit, vector<vector<int>>& adj, int n){
-      visit[n]=1;
+
+  void dfs(int n, vector<int>& visited, vector<vector<int>>& adj, int d){
+      
+      visited[n]=1;
+      if(n == d)return;
       
       for(auto j: adj[n]){
-          if(visit[j]==0)dfs(visit, adj, j);
+          if(visited[j]==0){
+              dfs(j, visited, adj, d);
+          }
       }
   }
-  
   
     bool isBridge(int V, vector<vector<int>> &edges, int c, int d) {
         // Code here
         vector<vector<int>>adj(V);
         for(int i=0;i<edges.size();i++){
-            if( (edges[i][0]==c && edges[i][1]==d) || (edges[i][0]==d && edges[i][1]==c) ) continue;
-            adj[edges[i][0]].push_back(edges[i][1]);
-            adj[edges[i][1]].push_back(edges[i][0]);
+            int u = edges[i][0], v = edges[i][1];
+            
+            if(((u == c) && (v==d)) || ((u==d) && (v==c))) continue;
+            adj[u].push_back(v);
+            adj[v].push_back(u);
         }
         
-        vector<int>visit(V , 0);
-        dfs(visit, adj, c);
+        vector<int>visited(V, 0);
+        dfs(c, visited, adj, d);
         
-        return (visit[d]==0);
+        if(visited[d]==0) return true;
+        return false;
+      
     }
 };
