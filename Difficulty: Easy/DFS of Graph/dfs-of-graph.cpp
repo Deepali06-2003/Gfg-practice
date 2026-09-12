@@ -1,29 +1,30 @@
 class Solution {
   public:
-  
-  void dfs(vector<vector<int>>& adj, vector<int>& visit, int node, vector<int>& res){
-      
-      visit[node]=1;
-      res.push_back(node);
-      
-      for(auto j : adj[node]){
-          if(visit[j]==0){
-              dfs(adj, visit, j, res);
-          }
-      }
-  }
+    
+    void helper(vector<vector<int>>& adj, vector<int>& visited, int n , vector<int>& res){
+        visited[n]=1;
+        res.push_back(n);
+        
+        for(auto j : adj[n]){
+            if(visited[j]==-1){
+                helper(adj, visited, j, res);
+            }
+        }
+    }
     vector<int> dfs(vector<vector<int>>& adj) {
         // Code here
-        int V = adj.size();
-        vector<int>visit(V, 0);
+        
+        int n = adj.size();
+        vector<int> visited(n, -1);
         
         vector<int>res;
         
-        for(int i=0;i<V;i++){
-            if(visit[i]==0){
-                dfs(adj, visit , i, res);
+        for(int i=0;i<n;i++){
+            if(visited[i]==-1){
+                helper(adj, visited, i, res);
             }
         }
+        
         return res;
     }
 };
