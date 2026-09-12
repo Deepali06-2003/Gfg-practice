@@ -1,18 +1,30 @@
 class Solution {
   public:
   
-  bool helper(vector<vector<int>>& adj, vector<int>& visited, int n, int p){
+  bool helper(vector<vector<int>>& adj, vector<int>& visited, int n){
       
-      visited[n]=1;
-      
-      for(auto j: adj[n]){
-          
-          if(visited[j]==-1){
-              if(helper(adj, visited, j, n)==true) return true;
-          }
-          else if(visited[j]==1 && j != p) return true;
-      }
-      return false;
+     queue<pair<int, int>>q;  //node, parent
+     
+     q.push({n , -1});
+     visited[n]=1;
+     
+     while(!q.empty()){
+         
+         auto[x, p] = q.front();
+         q.pop();
+         
+         
+         for(auto j : adj[x]){
+             
+             if(visited[j] == -1){
+                 visited[j]=1;
+                 q.push({j, x});
+             }
+             
+             else if(visited[j]==1 && j!=p) return true;
+         }
+     }
+     return false;
   }
     bool isCycle(int V, vector<vector<int>>& edges) {
         // Code here
@@ -27,7 +39,7 @@ class Solution {
         
         for(int i=0;i<V;i++){
             if(visited[i]==-1){
-                if(helper(adj, visited, i, -1) == true) return true;
+                if(helper(adj, visited, i) == true) return true;
             }
         }
         
