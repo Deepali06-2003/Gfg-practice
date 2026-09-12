@@ -7,8 +7,8 @@ class Solution {
       
       for(auto j: adj[n]){
           
-          if(visited[j]== -1){
-              if(helper(adj, visited, j, n)) return true;
+          if(visited[j]==-1){
+              if(helper(adj, visited, j, n)==true) return true;
           }
           else if(visited[j]==1 && j != p) return true;
       }
@@ -23,10 +23,10 @@ class Solution {
             adj[edges[i][1]].push_back(edges[i][0]);
         }
         
-        vector<int>visited(V, -1);
+        vector<int>visited(V,-1);
         
         for(int i=0;i<V;i++){
-            if(visited[i] == -1){
+            if(visited[i]==-1){
                 if(helper(adj, visited, i, -1) == true) return true;
             }
         }
