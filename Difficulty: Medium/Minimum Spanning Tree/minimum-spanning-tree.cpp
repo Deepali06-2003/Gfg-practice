@@ -6,35 +6,35 @@ class Solution {
         for(int i=0;i<edges.size();i++){
             int u = edges[i][0], v = edges[i][1], wt = edges[i][2];
             
-            adj[u].push_back({v, wt});adj[v].push_back({u, wt});
+            adj[u].push_back({v, wt});
+            adj[v].push_back({u, wt});
         }
         
-        //pair<int,pair<int, int>> // wt , node, parent
-       priority_queue< pair<int,pair<int, int>> , vector< pair<int,pair<int, int>>> , greater< pair<int,pair<int, int>>>>pq;
-       int sum = 0;
-       vector<pair<int, int>>mst;
+       priority_queue<pair<int, int>, vector<pair<int, int>> , greater<pair<int, int>>>pq;
+       //dist , node
        
-       vector<int>visited(V, 0);
+       int sum =0;
+       vector<int>dist(V, INT_MAX);
+       vector<int>visited(V, -1);
        
-       pq.push({0,{0,-1}});
-       
+       pq.push({0, 0});
        
        while(!pq.empty()){
-           
-           auto t = pq.top();
+           auto[d,n] = pq.top();
            pq.pop();
            
-           int wt = t.first , v = t.second.first , u = t.second.second;
+           if(visited[n]==1) continue;
            
-           if(visited[v]==1) continue;
+           visited[n]=1;
+           sum = sum + d;
            
-           visited[v]=1;
-           sum = sum+wt;
-           mst.push_back({u, v});
-           
-           for(auto j : adj[v]){
-               if(visited[j.first]==0){
-                   pq.push({j.second , {j.first, v}});
+           for(auto j : adj[n]){
+               int cd = j.second;
+               int cn = j.first;
+               
+               if(visited[cn]==-1 && dist[cn]> cd){
+                   dist[cn] = cd;
+                   pq.push({dist[cn] , cn});
                }
            }
        }
