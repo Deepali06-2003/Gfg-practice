@@ -1,23 +1,18 @@
 class Solution {
   public:
-  bool helper(vector<int>& arr, vector<vector<int>>& dp , int i , int sum){
-      if(sum == 0)return true;
-      if(i==0){
-          return (arr[0] == sum);
-      }
-      if(dp[i][sum] != -1)return dp[i][sum];
+  
+  bool helper(vector<int>& arr, int sum, int n , int idx){
+      if(sum == 0) return true;
+      if(sum<0 || idx == n) return false;
       
-      bool nt = helper(arr , dp ,i-1 , sum);
-      bool t = false;
-      if(arr[i] <= sum){
-          t = helper(arr , dp ,i-1 , sum- arr[i]);
-      }
-      return dp[i][sum] = (nt | t);
+      return helper(arr, sum-arr[idx], n , idx+1) ||  helper(arr, sum, n, idx+1);
   }
     bool isSubsetSum(vector<int>& arr, int sum) {
         // code here
+        //sort(arr.begin(), arr.end());
+        
         int n = arr.size();
-        vector<vector<int>> dp (n, vector<int>(sum+1 , -1));
-        return helper(arr, dp , n-1 ,sum);
+        
+        return helper(arr, sum, n, 0);
     }
 };
